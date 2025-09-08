@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public Long register(@RequestBody CommentDTO dto) {
         return commentService.register(dto);
     }
@@ -34,12 +36,14 @@ public class CommentController {
     }
     
     @PutMapping("/{cno}")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public void modify(@PathVariable("cno") Long cno, @RequestBody CommentDTO dto) {
         dto.setCno(cno);
         commentService.modify(dto);
     }
 
     @DeleteMapping("/{cno}")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public void delete(@PathVariable("cno") Long cno) {
         commentService.delete(cno);
     }

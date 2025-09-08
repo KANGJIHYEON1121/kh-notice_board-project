@@ -9,13 +9,13 @@ const InputComponent = styled.input`
   border: 1px solid #f2f2f2;
 `;
 
-const Input = ({ newComment, setNewComment }) => {
+const Input = ({ newComment, setNewComment, placeholder }) => {
   return (
     <>
       <InputComponent
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
-        placeholder="댓글 입력"
+        placeholder={placeholder}
       ></InputComponent>
     </>
   );

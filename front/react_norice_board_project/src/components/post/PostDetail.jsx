@@ -69,13 +69,13 @@ const PostDetail = ({ post, comments, setComments }) => {
     const result = confirm("댓글을 삭제 하시겠습니까?");
 
     if (result) {
-      await deleteComment(cno)
-        .then()
-        .catch((e) => console.log(e));
-
-      await getComments(pno).then((data) => {
-        setComments(data);
-      });
+      try {
+        await deleteComment(cno);
+        const updated = await getComments(pno);
+        setComments(updated);
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -97,7 +97,7 @@ const PostDetail = ({ post, comments, setComments }) => {
             <Profile writer={post?.writer} />
             <Content content={post?.content} regDate={post?.regDate} />
           </div>
-          {comments.map((comment) => {
+          {(Array.isArray(comments) ? comments : []).map((comment) => {
             const isEditing = editCommentId === comment.cno;
 
             return (
@@ -141,7 +141,11 @@ const PostDetail = ({ post, comments, setComments }) => {
           })}
         </RightMain>
         <RightFooter>
-          <Input newComment={newComment} setNewComment={setNewComment} />
+          <Input
+            newComment={newComment}
+            setNewComment={setNewComment}
+            placeholder={"댓글 입력"}
+          />
           <Button onClick={onAddComment} text={"등록"} />
         </RightFooter>
       </RightSection>

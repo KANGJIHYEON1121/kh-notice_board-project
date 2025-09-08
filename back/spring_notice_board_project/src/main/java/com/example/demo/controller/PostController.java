@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,6 +51,7 @@ public class PostController {
 	}
 
 	@PutMapping("/{pno}")
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 	public Map<String, String> modify(@PathVariable(name = "pno") Long pno, PostDTO postDTO) {
 
 		// 수정할 게시글 번호 세팅
@@ -90,6 +92,7 @@ public class PostController {
 	}
 
 	@DeleteMapping("/{pno}")
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 	public Map<String, String> remove(@PathVariable("pno") Long pno) {
 		// 삭제해야 할 파일들 알아내기
 		List<String> oldFileNames = postService.get(pno).getUploadFileNames();
@@ -99,6 +102,7 @@ public class PostController {
 	}
 
 	@PostMapping
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 	public Map<String, Long> register(PostDTO postDTO) {
 		log.info("rgister: " + postDTO);
 		List<MultipartFile> files = postDTO.getFiles();

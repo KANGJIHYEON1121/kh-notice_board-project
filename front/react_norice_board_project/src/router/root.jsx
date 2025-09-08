@@ -8,6 +8,7 @@ const UploadPage = lazy(() => import("../pages/UploadPage"));
 const ListPage = lazy(() => import("../pages/ListPage"));
 const ReadPage = lazy(() => import("../pages/ReadPage"));
 const ModifyPage = lazy(() => import("../pages/ModifyPage"));
+const LoginPage = lazy(() => import("../pages/LoginPage"));
 
 const root = createBrowserRouter([
   {
@@ -52,6 +53,15 @@ const root = createBrowserRouter([
       <Suspense fallback={<Loading />}>
         <Header />
         <ModifyPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Header />
+        <LoginPage />
       </Suspense>
     ),
   },

@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,8 @@ public class PostDTO {
 	private Long pno; // 게시글 번호
 	private String content; // 본문
 	private String writer; // 작성자 (email or 닉네임)
-	private int likeCount; // 좋아요 갯
+	private int likeCount; // 좋아요 갯수
+	private LocalDate regDate;
 
 	@Builder.Default
 	private List<MultipartFile> files = new ArrayList<>();

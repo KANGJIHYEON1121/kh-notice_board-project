@@ -1,37 +1,43 @@
 import Profile from "../Profile";
 import LikeButton from "../LikeButton";
 import SettingButton from "../SettingButton";
-import styled from "styled-components";
+import Input from "../Input";
 import {
   DetailPostContainer,
   RightHeader,
   RightMain,
   RightSection,
   LeftSection,
+  RightFooter,
 } from "./PostDetailStyle";
 import Content from "../Content";
+import Button from "../Button";
+import DetailCarousel from "./DetailCarousel";
 
-const PostDetail = () => {
+const PostDetail = ({ post }) => {
   return (
     <DetailPostContainer>
       <LeftSection>
-        <img
-          src="https://img.freepik.com/free-vector/graident-ai-robot-vectorart_78370-4114.jpg?semt=ais_incoming&w=740&q=80"
-          alt="게시글 이미지"
-        />
+        <DetailCarousel />
       </LeftSection>
       <RightSection>
         <RightHeader>
-          <Profile />
+          <Profile writer={post?.writer} />
           <div>
-            <LikeButton />
+            <LikeButton count={post?.likeCount} />
             <SettingButton />
           </div>
         </RightHeader>
         <RightMain>
-          <Profile />
-          <Content />
+          <div>
+            <Profile writer={post?.writer} />
+            <Content content={post?.content} />
+          </div>
         </RightMain>
+        <RightFooter>
+          <Input />
+          <Button />
+        </RightFooter>
       </RightSection>
     </DetailPostContainer>
   );

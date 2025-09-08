@@ -15,11 +15,11 @@ const ProfileBox = styled.div`
   }
 `;
 
-const Profile = () => {
+const Profile = ({ writer }) => {
   return (
     <ProfileBox>
       <img src={defaultProfileImg} alt="프로필 이미지" />
-      <p>Name</p>
+      <p>{writer}</p>
     </ProfileBox>
   );
 };

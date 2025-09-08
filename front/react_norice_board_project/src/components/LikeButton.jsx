@@ -22,7 +22,7 @@ const LikeBox = styled.div`
   overflow-y: hidden;
 `;
 
-const LikeButton = () => {
+const LikeButton = ({ count }) => {
   const [isLike, setIsLike] = useState(false);
 
   const onClickLike = () => {
@@ -38,7 +38,7 @@ const LikeButton = () => {
           <img src={UnLikeBtn} alt="좋아요 버튼" />
         )}
       </LikeBox>
-      <p>0</p>
+      <p>{count}</p>
     </Div>
   );
 };

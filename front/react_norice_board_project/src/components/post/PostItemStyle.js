@@ -22,7 +22,10 @@ export const ItemMain = styled.div`
 
     img {
         width: 100%;
-        height: 400px;
+        height: 100%;
+        overflow: auto;
+        background-position: center;
+        cursor: pointer;
     }
 `
 

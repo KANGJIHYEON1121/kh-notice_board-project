@@ -64,17 +64,15 @@ public class PostServiceImpl implements PostService {
 
 	private PostDTO entityToDTO(Post post) {
 		PostDTO postDTO = PostDTO.builder().pno(post.getPno()).content(post.getContent()).writer(post.getWriter())
-				.build();
+				.regDate(post.getRegDate()).build();
 
 		List<PostImage> imageList = post.getImageList();
 
-		if (imageList == null || imageList.isEmpty()) {
-			return postDTO;
+		if (imageList != null && imageList.size() > 0) {
+			List<String> fileNameList = imageList.stream().map(postImage -> postImage.getFileName()).toList();
+			postDTO.setUploadFileNames(fileNameList);
 		}
 
-		List<String> fileNameList = imageList.stream().map(postImage -> postImage.getFileName()).toList();
-
-		postDTO.setUploadFileNames(fileNameList);
 		return postDTO;
 	}
 
@@ -135,6 +133,13 @@ public class PostServiceImpl implements PostService {
 
 		return PageResponseDTO.<PostDTO>withAll().dtoList(dtoList).totalCount(totalCount).pageRequestDTO(pageRequestDTO)
 				.build();
+	}
+
+	@Override
+	public List<PostDTO> getAll() {
+		List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "pno"));
+
+		return posts.stream().map(this::entityToDTO).collect(Collectors.toList());
 	}
 
 }

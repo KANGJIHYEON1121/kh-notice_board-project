@@ -44,6 +44,11 @@ public class PostController {
 		return postService.list(pageRequestDTO);
 	}
 
+	@GetMapping("/all")
+	public List<PostDTO> getList() {
+		return postService.getAll();
+	}
+
 	@PutMapping("/{pno}")
 	public Map<String, String> modify(@PathVariable(name = "pno") Long pno, PostDTO postDTO) {
 
@@ -93,7 +98,7 @@ public class PostController {
 		return Map.of("RESULT", "SUCCESS");
 	}
 
-	@PostMapping("/")
+	@PostMapping
 	public Map<String, Long> register(PostDTO postDTO) {
 		log.info("rgister: " + postDTO);
 		List<MultipartFile> files = postDTO.getFiles();

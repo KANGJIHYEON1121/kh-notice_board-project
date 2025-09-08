@@ -1,0 +1,20 @@
+import styled from "styled-components";
+
+const InputComponent = styled.input`
+  width: 100%;
+  height: 30px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #f2f2f2;
+`;
+
+const Input = () => {
+  return (
+    <>
+      <InputComponent placeholder="댓글 입력"></InputComponent>
+    </>
+  );
+};
+
+export default Input;

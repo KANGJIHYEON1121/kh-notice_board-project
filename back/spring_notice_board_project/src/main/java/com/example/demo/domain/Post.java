@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -53,6 +54,11 @@ public class Post {
 
 	public void changeContent(String content) {
 		this.content = content;
+	}
+	
+	@PrePersist
+	public void prePersist() {
+		this.regDate = LocalDate.now();
 	}
 
 	public void addImage(PostImage image) {

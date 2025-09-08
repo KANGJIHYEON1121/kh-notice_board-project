@@ -9,10 +9,7 @@ export const DetailPostContainer = styled.div`
 `;
 
 export const LeftSection = styled.div`
-    img{
-        width: 400px;
-        height: 400px;
-    }
+  margin-right: 10px;
 `
 
 export const RightSection = styled.div`
@@ -27,9 +24,26 @@ export const RightHeader = styled.div`
     display: flex;
     align-items: center;
   }
+
+
 `;
 
 export const RightMain = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+  height: 400px;
+  border-top:1px solid #f2f2f2;
+  
+
+  div {
     display: flex;
-    align-items: center;
+  }
 `;
+
+export const RightFooter = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`

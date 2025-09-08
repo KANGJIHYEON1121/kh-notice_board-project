@@ -19,3 +19,13 @@ export const addPost = async (post) => {
   });
   return res.data;
 };
+
+export const updatePost = async (post, pno) => {
+  const res = await axios.put(`${HOST_URL}/post/${pno}`, post);
+  return res.data;
+};
+
+export const deletePost = async (pno) => {
+  const res = await axios.delete(`${HOST_URL}/post/${pno}`);
+  return res.data;
+};

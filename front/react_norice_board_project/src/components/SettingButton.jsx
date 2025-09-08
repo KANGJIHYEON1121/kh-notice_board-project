@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import SettingBtn from "../assets/State=Default.svg";
+import useCustomMove from "../hooks/useCustomMove";
 
 const SettingDiv = styled.div`
   cursor: pointer;
@@ -7,10 +8,12 @@ const SettingDiv = styled.div`
   padding: 10px;
 `;
 
-const SettingButton = () => {
+const SettingButton = ({ pno }) => {
+  const { moveToModify } = useCustomMove();
+
   return (
     <SettingDiv>
-      <img src={SettingBtn} alt="설정 버튼" />
+      <img src={SettingBtn} onClick={() => moveToModify(pno)} alt="설정 버튼" />
     </SettingDiv>
   );
 };

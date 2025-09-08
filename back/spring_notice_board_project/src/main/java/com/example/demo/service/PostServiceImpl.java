@@ -137,9 +137,17 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<PostDTO> getAll() {
-		List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "pno"));
+	    List<Post> posts = postRepository.findAllNotDeletedWithImages();
 
-		return posts.stream().map(this::entityToDTO).collect(Collectors.toList());
+	    return posts.stream().map(post -> {
+	        PostDTO dto = modelMapper.map(post, PostDTO.class);
+	        List<PostImage> images = post.getImageList();
+	        if (images != null && !images.isEmpty()) {
+	            List<String> imageNames = images.stream().map(PostImage::getFileName).toList();
+	            dto.setUploadFileNames(imageNames);
+	        }
+	        return dto;
+	    }).collect(Collectors.toList());
 	}
 
 }

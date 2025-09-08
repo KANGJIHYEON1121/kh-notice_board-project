@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { HOST_URL } from "../../api/HostUrl";
 
-const UploadImage = ({ setFiles }) => {
-  const [previewUrls, setPreviewUrls] = useState([]);
+const UploadImage = ({
+  setFiles,
+  defaultUrls = [],
+  defaultFileNames = [],
+  setDefaultFileNames,
+}) => {
+  const [previewUrls, setPreviewUrls] = useState(defaultUrls);
+
+  useEffect(() => {
+    setPreviewUrls(defaultUrls);
+  }, [defaultUrls]);
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -17,8 +27,16 @@ const UploadImage = ({ setFiles }) => {
     });
 
     Promise.all(readers).then((results) => {
-      setPreviewUrls(results);
+      setPreviewUrls((prev) => [...prev, ...results]);
     });
+  };
+
+  const handleDelete = (idx) => {
+    const urlToDelete = previewUrls[idx];
+    setPreviewUrls((prev) => prev.filter((_, i) => i !== idx));
+    if (urlToDelete.startsWith("/post/view") && setDefaultFileNames) {
+      setDefaultFileNames((prev) => prev.filter((_, i) => i !== idx));
+    }
   };
 
   return (
@@ -26,7 +44,14 @@ const UploadImage = ({ setFiles }) => {
       <ImageUpload>
         {previewUrls.length > 0 ? (
           previewUrls.map((url, idx) => (
-            <PreviewImage key={idx} src={url} alt={`preview-${idx}`} />
+            <ImageContainer key={idx}>
+              <PreviewImage
+                src={url.startsWith("/post/view") ? `${HOST_URL}${url}` : url}
+                alt={`preview-${idx}`}
+                onClick={() => handleDelete(idx)}
+              />
+              <DeleteButton onClick={() => handleDelete(idx)}>X</DeleteButton>
+            </ImageContainer>
           ))
         ) : (
           <>
@@ -77,9 +102,34 @@ const HiddenInput = styled.input`
   display: none;
 `;
 
-const PreviewImage = styled.img`
+const ImageContainer = styled.div`
+  position: relative;
   width: 100px;
   height: 100px;
-  object-fit: cover;
   margin: 5px;
+`;
+
+const PreviewImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  line-height: 18px;
+  text-align: center;
+  color: #000000;
+  font-weight: 700;
 `;

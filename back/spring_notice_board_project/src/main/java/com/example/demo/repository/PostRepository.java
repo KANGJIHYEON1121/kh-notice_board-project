@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -24,4 +25,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	
 	@Query("select p, pi from Post p left join p.imageList pi where p.delFlag = false")
 	Page<Object[]> selectList(Pageable pageable);
+	
+	@EntityGraph(attributePaths = {"imageList"})
+	@Query("SELECT p FROM Post p WHERE p.delFlag = false ORDER BY p.pno DESC")
+	List<Post> findAllNotDeletedWithImages();
 }

@@ -19,7 +19,7 @@ const PostItem = ({ post }) => {
     <CardContainer>
       <ItemHeader>
         <Profile writer={post?.writer} />
-        <SettingButton />
+        <SettingButton pno={post?.pno} />
       </ItemHeader>
       <ItemMain onClick={() => moveToRead(post?.pno)}>
         <img

@@ -11,8 +11,8 @@ const ButtonComponent = styled.button`
   font-size: 15px;
 `;
 
-const Button = ({ onClick }) => {
-  return <ButtonComponent onClick={onClick}>등록</ButtonComponent>;
+const Button = ({ onClick, text }) => {
+  return <ButtonComponent onClick={onClick}>{text}</ButtonComponent>;
 };
 
 export default Button;

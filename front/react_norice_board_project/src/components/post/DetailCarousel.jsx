@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { HOST_URL } from "../../api/HostUrl.js";
 import {
   CarouselContainer,
   Cell,
@@ -9,9 +9,7 @@ import {
   IndicatorDot,
 } from "./DetailCarouselStyle.js";
 
-const DetailCarousel = () => {
-  const { productNo } = useParams();
-  const location = useLocation();
+const DetailCarousel = ({ uploadFileNames }) => {
   const [current, setCurrent] = useState(0);
   const carouselRef = useRef(null);
   const [images, setImages] = useState([]);
@@ -34,19 +32,19 @@ const DetailCarousel = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const sampleImages = [
-          "https://mblogthumb-phinf.pstatic.net/MjAyNDAyMTdfMjI5/MDAxNzA4MTgxOTEwMjYx.mSaSuTActerFUauXr9EYipgltWCyarhNNpuzRvkzP7kg._CCk47RuNmuyR4UZL-miXgX5EJDYyaClqCBcQG_ttacg.PNG.kkson50/sample_images_00.png?type=w800",
-          "https://mblogthumb-phinf.pstatic.net/MjAxOTEwMTFfNjEg/MDAxNTcwNzg1ODM3Nzc0.zxDXm20VlPdQv8GQi9LWOdPwkqoBdiEmf8aBTWTsPF8g.FqMQTiF6ufydkQxrLBgET3kNYAyyKGJTWTyi1qd1-_Ag.PNG.kkson50/sample_images_01.png?type=w800",
-          "https://mblogthumb-phinf.pstatic.net/MjAxOTEwMTFfODMg/MDAxNTcwNzg1ODM3NTUz.2m5sz7K4ATO7WZzXYGE-MmUQ1DYUOflq0IaGgitVZEIg.jYZnxxm0E275Jplbrw25aFCFPVXKcmai1zhf8rlYl3Eg.PNG.kkson50/sample_images_02.png?type=w800",
-        ];
-        setImages(sampleImages);
+        // props가 undefined일 수 있으므로 체크
+        if (uploadFileNames && Array.isArray(uploadFileNames)) {
+          setImages(uploadFileNames);
+        } else {
+          setImages([]); // 빈 배열로 초기화
+        }
       } catch (err) {
         console.error("이미지 로드 실패:", err);
       }
     };
 
     fetchImages();
-  }, []);
+  }, [uploadFileNames]); // ← 의존성 배열에 넣는 것도 잊지 마세요!
 
   const nextEvent = () => {
     if (!images || images.length === 0) return;
@@ -76,11 +74,11 @@ const DetailCarousel = () => {
         {images.length > 0 ? (
           images.map((img, idx) => (
             <Cell key={idx}>
-              <img src={img} alt={`image-${idx}`} />
+              <img src={`${HOST_URL}/post/view/${img}`} alt={`image-${idx}`} />
             </Cell>
           ))
         ) : (
-          <p>이미지가 없습니다</p>
+          <img src={`${HOST_URL}/post/view/default`} alt={"기본 이미지"} />
         )}
       </div>
       {images && images.length > 1 && (

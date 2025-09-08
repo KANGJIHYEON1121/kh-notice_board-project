@@ -31,7 +31,7 @@ const UploadComponrnt = () => {
         <UploadImage setFiles={setFiles} />
         <ContentBox>
           <UploadContent setContent={setContent} />
-          <Button onClick={handleSubmit} />
+          <Button onClick={handleSubmit} text={"등록"} />
         </ContentBox>
       </UploadWrapper>
     </Container>

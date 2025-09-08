@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const UploadContent = ({ setContent }) => {
+const UploadContent = ({ setContent, content }) => {
+  const [value, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(content);
+  }, [content]);
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    setContent(newValue);
+  };
+
   return (
     <TextArea
       placeholder="게시글 내용을 입력해 주세요"
-      onChange={(e) => setContent(e.target.value)}
+      value={value}
+      onChange={handleChange}
     />
   );
 };

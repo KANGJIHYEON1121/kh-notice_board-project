@@ -18,7 +18,7 @@ const PostDetail = ({ post }) => {
   return (
     <DetailPostContainer>
       <LeftSection>
-        <DetailCarousel />
+        <DetailCarousel uploadFileNames={post?.uploadFileNames ?? []} />
       </LeftSection>
       <RightSection>
         <RightHeader>
@@ -36,7 +36,7 @@ const PostDetail = ({ post }) => {
         </RightMain>
         <RightFooter>
           <Input />
-          <Button />
+          <Button text={"등록"} />
         </RightFooter>
       </RightSection>
     </DetailPostContainer>

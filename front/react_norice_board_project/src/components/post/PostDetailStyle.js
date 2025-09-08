@@ -35,12 +35,36 @@ export const RightMain = styled.div`
   width: 100%;
   height: 400px;
   border-top:1px solid #f2f2f2;
+  overflow-y: auto;
   
-
   div {
     display: flex;
   }
 `;
+
+export const CommentBox = styled.div`
+  width: 98%;
+  display: flex;
+  justify-content: space-between;
+
+  input {
+    width: 420px;
+    font-size: 18px;
+  }
+
+`
+
+export const CommentBtn = styled.div`
+  display: flex;
+  gap: 5px;
+  color:rgb(200, 200, 200);
+
+  p {
+    cursor: pointer;
+  }
+`
+
+
 
 export const RightFooter = styled.div`
   display: flex;

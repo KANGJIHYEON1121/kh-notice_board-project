@@ -101,4 +101,44 @@ public class CustomFileUtil {
 			}
 		});
 	}
+	
+	public String saveSingle(MultipartFile multipartFile) {
+	    if (multipartFile == null || multipartFile.isEmpty()) {
+	        return null;
+	    }
+
+	    String savedName = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
+	    Path savePath = Paths.get(uploadPath, savedName);
+
+	    try {
+	        Files.copy(multipartFile.getInputStream(), savePath);
+
+	        // 이미지일 경우 썸네일 생성
+	        String contentType = multipartFile.getContentType();
+	        if (contentType != null && contentType.startsWith("image")) {
+	            Path thumbnailPath = Paths.get(uploadPath, "s_" + savedName);
+	            Thumbnails.of(savePath.toFile())
+	                      .size(400, 400)
+	                      .toFile(thumbnailPath.toFile());
+	        }
+	    } catch (IOException e) {
+	        throw new RuntimeException("파일 저장 실패: " + e.getMessage());
+	    }
+
+	    return savedName;
+	}
+	
+	public void deleteFile(String fileName) {
+	    if (fileName == null || fileName.isEmpty()) return;
+
+	    Path filePath = Paths.get(uploadPath, fileName);
+	    Path thumbnailPath = Paths.get(uploadPath, "s_" + fileName);
+
+	    try {
+	        Files.deleteIfExists(filePath);
+	        Files.deleteIfExists(thumbnailPath);
+	    } catch (IOException e) {
+	        throw new RuntimeException("파일 삭제 실패: " + e.getMessage());
+	    }
+	}
 }

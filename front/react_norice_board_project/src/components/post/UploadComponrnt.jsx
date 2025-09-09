@@ -5,11 +5,13 @@ import Button from "../Button";
 import styled from "styled-components";
 import { userId } from "../../api/HostUrl";
 import { addPost } from "../../api/postApi";
+import useCustomMove from "../../hooks/useCustomMove";
 
 const UploadComponrnt = () => {
   const [files, setFiles] = useState(null);
   const [content, setContent] = useState("");
-  const [writer, setWriter] = useState(userId); // 로그인 정보 변경 필요(임시)
+  const [writer, setWriter] = useState(userId);
+  const { moveToHome } = useCustomMove();
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -20,6 +22,7 @@ const UploadComponrnt = () => {
     try {
       const result = await addPost(formData);
       alert("업로드 완료!");
+      moveToHome(true);
     } catch (error) {
       console.log(error);
     }

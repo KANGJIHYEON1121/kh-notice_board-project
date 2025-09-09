@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -8,7 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.util.CustomJWTException;
 import com.example.demo.util.JWTUtil;
+import com.google.gson.Gson;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -18,7 +22,8 @@ import lombok.extern.log4j.Log4j2;
 public class APIRefreshController {
 
 	@RequestMapping("/api/member/refresh")
-	public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, String refreshToken) {
+	public Map<String, Object> refresh(@RequestHeader("Authorization") String authHeader, String refreshToken,
+			HttpServletResponse response) throws UnsupportedEncodingException {
 		if (refreshToken == null) {
 			throw new CustomJWTException("NULL_REFRASH");
 		}
@@ -40,6 +45,18 @@ public class APIRefreshController {
 		// refresh 토큰이 1시간이 안남았으면 1일 refresh token 생성
 		String newRefreshToken = checkTime((Integer) claims.get("exp")) == true ? JWTUtil.generateToken(claims, 60 * 24)
 				: refreshToken;
+
+		// 쿠키도 다시 내려주자
+		Gson gson = new Gson();
+		String jsonStr = gson.toJson(claims);
+
+		Cookie memberCookie = new Cookie("member", java.net.URLEncoder.encode(jsonStr, "UTF-8"));
+		memberCookie.setPath("/");
+		memberCookie.setMaxAge(60 * 60);
+		memberCookie.setHttpOnly(false);
+
+		response.addCookie(memberCookie);
+
 		return Map.of("accessToken", newAccessToken, "refreshToken", newRefreshToken);
 
 	}

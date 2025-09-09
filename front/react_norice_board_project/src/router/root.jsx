@@ -9,6 +9,8 @@ const ListPage = lazy(() => import("../pages/ListPage"));
 const ReadPage = lazy(() => import("../pages/ReadPage"));
 const ModifyPage = lazy(() => import("../pages/ModifyPage"));
 const LoginPage = lazy(() => import("../pages/LoginPage"));
+const JoinPage = lazy(() => import("../pages/JoinPage"));
+const MyPage = lazy(() => import("../pages/MyPage"));
 
 const root = createBrowserRouter([
   {
@@ -62,6 +64,24 @@ const root = createBrowserRouter([
       <Suspense fallback={<Loading />}>
         <Header />
         <LoginPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/join",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Header />
+        <JoinPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/mypage",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Header />
+        <MyPage />
       </Suspense>
     ),
   },

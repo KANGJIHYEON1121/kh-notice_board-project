@@ -87,7 +87,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 		}
 
 		// 게시글 목록/조회는 제외
-		if (path.equals("/api/post/list") || path.startsWith("/api/post/") && request.getMethod().equals("GET")) {
+		if (path.equals("/api/post/list") || path.equals("/api/post/all")
+				|| (path.startsWith("/api/post/") && request.getMethod().equals("GET"))) {
 			return true;
 		}
 
@@ -98,6 +99,16 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
 		// 이미지 조회
 		if (path.startsWith("/api/products/view/") || path.startsWith("/images/")) {
+			return true;
+		}
+
+		// 프로필 이미지 조회는 제외
+		if (path.startsWith("/api/member/profile-image/")) {
+			return true;
+		}
+
+		// 회원가입
+		if (path.startsWith("/api/member/join")) {
 			return true;
 		}
 

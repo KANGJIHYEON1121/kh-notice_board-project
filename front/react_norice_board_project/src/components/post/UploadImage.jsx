@@ -11,7 +11,15 @@ const UploadImage = ({
   const [previewUrls, setPreviewUrls] = useState(defaultUrls);
 
   useEffect(() => {
-    setPreviewUrls(defaultUrls);
+    // 수정 페이지에서만 작동하도록 조건 분기
+    if (defaultUrls && defaultUrls.length > 0) {
+      const isOnlyDefault = defaultUrls.every((url) =>
+        url.startsWith("/post/view")
+      );
+      if (isOnlyDefault) {
+        setPreviewUrls(defaultUrls);
+      }
+    }
   }, [defaultUrls]);
 
   const handleFileChange = (e) => {

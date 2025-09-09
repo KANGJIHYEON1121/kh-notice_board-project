@@ -4,8 +4,8 @@ const useCustomMove = () => {
   const navigate = useNavigate();
 
   // home 이동
-  const moveToHome = () => {
-    navigate(`/`);
+  const moveToHome = (value) => {
+    navigate({ pathname: `/` }, { replace: value });
   };
 
   // 특정 게시물 상세보기로 이동
@@ -16,6 +16,16 @@ const useCustomMove = () => {
   // 게시물 등록 페이지로 이동
   const moveToWrite = () => {
     navigate("/post/write");
+  };
+
+  // 회원가입 페이지로 이동
+  const moveToJoin = () => {
+    navigate("/join");
+  };
+
+  // 마이 페이지로 이동
+  const moveToMyPage = () => {
+    navigate("/mypage");
   };
 
   // 게시물 수정 페이지로 이동
@@ -34,6 +44,8 @@ const useCustomMove = () => {
     moveToModify,
     moveToList,
     moveToHome,
+    moveToJoin,
+    moveToMyPage,
   };
 };
 

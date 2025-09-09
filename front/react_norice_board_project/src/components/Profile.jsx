@@ -15,9 +15,9 @@ const ProfileBox = styled.div`
   }
 `;
 
-const Profile = ({ writer }) => {
+const Profile = ({ writer, onClick }) => {
   return (
-    <ProfileBox>
+    <ProfileBox onClick={onClick}>
       <img src={defaultProfileImg} alt="프로필 이미지" />
       <p>{writer}</p>
     </ProfileBox>

@@ -15,7 +15,7 @@ import {
 import Content from "../Content";
 import Button from "../Button";
 import DetailCarousel from "./DetailCarousel";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import {
   addComment,
@@ -24,14 +24,23 @@ import {
   updateComment,
 } from "../../api/commentApi";
 import { userId } from "../../api/HostUrl";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 const PostDetail = ({ post, comments, setComments }) => {
   const { pno } = useParams();
   const [editCommentId, setEditCommentId] = useState(null); // 현재 수정 중인 댓글 ID
   const [editContent, setEditContent] = useState(""); // 수정 중인 내용
   const [newComment, setNewComment] = useState("");
+  const { isLogin } = useCustomLogin();
+  const navigate = useNavigate();
 
   const onAddComment = async () => {
+    if (!isLogin) {
+      alert("로그인을 해주세요");
+      navigate("/login");
+      return;
+    }
+
     if (!newComment.trim()) return alert("댓글을 입력하세요.");
 
     const commentdata = {
@@ -56,13 +65,16 @@ const PostDetail = ({ post, comments, setComments }) => {
   };
 
   const onEditSubmit = async () => {
-    await updateComment(editCommentId, { content: editContent });
-    setEditCommentId(null); // 편집 종료
-    setEditContent(""); // 초기화
+    try {
+      await updateComment(editCommentId, { content: editContent });
+      setEditCommentId(null);
+      setEditContent("");
 
-    await getComments(pno).then((data) => {
+      const data = await getComments(pno);
       setComments(data);
-    });
+    } catch (e) {
+      console.error("수정 실패", e);
+    }
   };
 
   const onDeleteSubmit = async (cno) => {
@@ -129,11 +141,13 @@ const PostDetail = ({ post, comments, setComments }) => {
                       <p onClick={onEditSubmit}>완료</p>
                       <p onClick={() => setEditCommentId(null)}>취소</p>
                     </>
-                  ) : (
+                  ) : comment.writer === userId ? (
                     <>
                       <p onClick={() => onEditClick(comment)}>수정</p>
                       <p onClick={() => onDeleteSubmit(comment.cno)}>삭제</p>
                     </>
+                  ) : (
+                    <></>
                   )}
                 </CommentBtn>
               </CommentBox>
@@ -142,8 +156,9 @@ const PostDetail = ({ post, comments, setComments }) => {
         </RightMain>
         <RightFooter>
           <Input
-            newComment={newComment}
-            setNewComment={setNewComment}
+            name={""}
+            value={newComment}
+            setValue={setNewComment}
             placeholder={"댓글 입력"}
           />
           <Button onClick={onAddComment} text={"등록"} />

@@ -12,6 +12,7 @@ import com.example.demo.util.JWTUtil;
 import com.google.gson.Gson;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
@@ -36,6 +37,11 @@ public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
 
 		Gson gson = new Gson();
 		String jsonStr = gson.toJson(claims);
+
+		Cookie memberCookie = new Cookie("member", java.net.URLEncoder.encode(jsonStr, "UTF-8"));
+		memberCookie.setPath("/");
+		memberCookie.setMaxAge(60 * 60); // 1시간
+		memberCookie.setHttpOnly(false); // JS에서 접근 가능해야 하므로 false
 
 		response.setContentType("application/json; charset=UTF-8");
 		PrintWriter printWriter = response.getWriter();

@@ -42,10 +42,19 @@ public class CustomSecurityConfig {
 		// CSRF 비활성화 (REST API에서는 일반적으로 disable)
 		http.csrf(csrf -> csrf.disable());
 
+		// 요청 허용/차단 설정
+		http.authorizeHttpRequests(
+				auth -> auth.requestMatchers("/api/member/login", "/api/member/join", "/api/member/refresh").permitAll()
+						.requestMatchers("/api/member/me").authenticated().requestMatchers("/api/post/list").permitAll()
+						.requestMatchers("/api/post/all").permitAll().requestMatchers("/api/post/*").permitAll()
+						.requestMatchers("/api/post/view/**").permitAll()
+						.requestMatchers("/api/member/profile-image/**").permitAll().requestMatchers("/api/comments/**")
+						.permitAll().requestMatchers("/images/**").permitAll().anyRequest().authenticated());
+
 		// 로그인페이지 URL 을 /api/member/login 지정하고, 인증되지 않은 사용자가 보호된 리소스를 요청하면 이 URL 로
 		// 리다이렉트된다.
 		http.formLogin(config -> {
-			config.loginPage("/api/member/login");
+			config.loginProcessingUrl("/api/member/login");
 
 			// 로그인 성공 시 실행될 핸들러 객체를 지정 코드
 			config.successHandler(new APILoginSuccessHandler());

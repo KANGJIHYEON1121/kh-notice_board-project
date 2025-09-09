@@ -35,8 +35,6 @@ const ReadPage = () => {
 
   return (
     <div>
-      ReadPage
-      {`param = ${pno}`}
       <PostDetail post={post} comments={comments} setComments={setComments} />
     </div>
   );

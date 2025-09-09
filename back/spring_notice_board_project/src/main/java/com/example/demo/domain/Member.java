@@ -50,5 +50,9 @@ public class Member {
 	public void changeSocial(boolean social) {
 		this.social = social;
 	}
+	
+	public void changeProfileImage(String profileImage) {
+	    this.profileImage = profileImage;
+	}
 
 }

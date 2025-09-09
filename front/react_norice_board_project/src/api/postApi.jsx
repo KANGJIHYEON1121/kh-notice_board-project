@@ -1,5 +1,6 @@
 import { HOST_URL } from "./HostUrl";
 import axios from "axios";
+import jwtAxios from "../util/jwtUtil";
 
 export const getPost = async (pno) => {
   const res = await axios.get(`${HOST_URL}/post/${pno}`);
@@ -11,8 +12,13 @@ export const getAll = async () => {
   return res.data;
 };
 
+export const getList = async () => {
+  const res = await axios.get(`${HOST_URL}/post/list`);
+  return res.data;
+};
+
 export const addPost = async (post) => {
-  const res = await axios.post(`${HOST_URL}/post`, post, {
+  const res = await jwtAxios.post(`${HOST_URL}/post`, post, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -21,11 +27,11 @@ export const addPost = async (post) => {
 };
 
 export const updatePost = async (post, pno) => {
-  const res = await axios.put(`${HOST_URL}/post/${pno}`, post);
+  const res = await jwtAxios.put(`${HOST_URL}/post/${pno}`, post);
   return res.data;
 };
 
 export const deletePost = async (pno) => {
-  const res = await axios.delete(`${HOST_URL}/post/${pno}`);
+  const res = await jwtAxios.delete(`${HOST_URL}/post/${pno}`);
   return res.data;
 };

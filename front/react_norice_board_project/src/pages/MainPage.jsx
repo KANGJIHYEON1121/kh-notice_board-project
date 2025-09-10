@@ -1,6 +1,8 @@
 import PostItem from "../components/post/PostItem";
 import { getAll } from "../api/postApi";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { getCookie } from "../util/cookie";
 
 const MainPage = () => {
   const [posts, setPosts] = useState([]);
@@ -23,12 +25,18 @@ const MainPage = () => {
       });
 
   return (
-    <div>
+    <Container>
       {posts.map((item) => (
         <PostItem key={item.pno} post={item} />
       ))}
-    </div>
+    </Container>
   );
 };
 
 export default MainPage;
+
+const Container = styled.div`
+  width: 500px;
+  margin: auto auto;
+  padding-top: 2rem;
+`;

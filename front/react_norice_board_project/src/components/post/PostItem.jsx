@@ -11,14 +11,20 @@ import Content from "../Content";
 import LikeButton from "../LikeButton";
 import { HOST_URL } from "../../api/HostUrl";
 import useCustomMove from "../../hooks/useCustomMove";
+import { useNavigate } from "react-router-dom";
 
 const PostItem = ({ post }) => {
   const { moveToRead } = useCustomMove();
+  const navigate = useNavigate();
 
   return (
     <CardContainer>
       <ItemHeader>
-        <Profile writer={post?.writer} />
+        <Profile
+          writerProfileImage={post?.writerProfileImage}
+          writer={post?.writerNickname}
+          onClick={() => navigate(`list/${post?.writer}`)}
+        />
         <SettingButton pno={post?.pno} />
       </ItemHeader>
       <ItemMain onClick={() => moveToRead(post?.pno)}>
@@ -33,7 +39,7 @@ const PostItem = ({ post }) => {
       </ItemMain>
       <ItemFooter>
         <Content content={post?.content} regDate={post?.regDate} />
-        <LikeButton count={post?.likeCount} />
+        <LikeButton count={post?.likeCount} pno={post?.pno} />
       </ItemFooter>
     </CardContainer>
   );

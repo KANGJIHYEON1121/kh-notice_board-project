@@ -27,34 +27,34 @@ class PostRepositoryTestss {
 	private PostService postService; 
 
 //	@Test
-	public void testInsert() {
-		for (int i = 0; i <= 100; i++) {
-			Post post = Post.builder().content("content test" + i).regDate(LocalDate.of(2025, 9, 04)).writer("user00")
-					.likeCount(0).build();
-			postRepository.save(post);
-		}
-	}
+//	public void testInsert() {
+//		for (int i = 0; i <= 100; i++) {
+//			Post post = Post.builder().content("content test" + i).regDate(LocalDate.of(2025, 9, 04)).writer("user00")
+//					.likeCount(0).build();
+//			postRepository.save(post);
+//		}
+//	}
 
 //	@Test
-	public void testRead() {
-		Long pno = 33L;
-		java.util.Optional<Post> result = postRepository.findById(pno);
-		Post post = result.orElseThrow();
-		log.info(post);
-	}
+//	public void testRead() {
+//		Long pno = 33L;
+//		java.util.Optional<Post> result = postRepository.findById(pno);
+//		Post post = result.orElseThrow();
+//		log.info(post);
+//	}
 
 //	@Test
-	public void testImage() {
-		for (int i = 0; i < 10; i++) {
-			Post post = Post.builder().content("test" + i).writer("user00").regDate(LocalDate.of(2025, 9, 4))
-					.likeCount(0).build();
-			// 2 개의 이미지 파일 추가
-			post.addImageString(UUID.randomUUID().toString() + "-" + "IMAGE1.jpg");
-			post.addImageString(UUID.randomUUID().toString() + "-" + "IMAGE2.jpg");
-			postRepository.save(post);
-			log.info(" ");
-		}
-	}
+//	public void testImage() {
+//		for (int i = 0; i < 10; i++) {
+//			Post post = Post.builder().content("test" + i).writer("user00").regDate(LocalDate.of(2025, 9, 4))
+//					.likeCount(0).build();
+//			// 2 개의 이미지 파일 추가
+//			post.addImageString(UUID.randomUUID().toString() + "-" + "IMAGE1.jpg");
+//			post.addImageString(UUID.randomUUID().toString() + "-" + "IMAGE2.jpg");
+//			postRepository.save(post);
+//			log.info(" ");
+//		}
+//	}
 
 //	@Test
 	public void testRead2() {
@@ -86,7 +86,7 @@ class PostRepositoryTestss {
 		postRepository.save(post);
 	}
 
-	@Test
+//	@Test
 	public void testList() {
 		PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(2).size(10).build();
 		PageResponseDTO<PostDTO> response = postService.list(pageRequestDTO);

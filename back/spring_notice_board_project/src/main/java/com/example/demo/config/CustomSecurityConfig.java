@@ -43,13 +43,15 @@ public class CustomSecurityConfig {
 		http.csrf(csrf -> csrf.disable());
 
 		// 요청 허용/차단 설정
-		http.authorizeHttpRequests(
-				auth -> auth.requestMatchers("/api/member/login", "/api/member/join", "/api/member/refresh").permitAll()
-						.requestMatchers("/api/member/me").authenticated().requestMatchers("/api/post/list").permitAll()
-						.requestMatchers("/api/post/all").permitAll().requestMatchers("/api/post/*").permitAll()
-						.requestMatchers("/api/post/view/**").permitAll()
-						.requestMatchers("/api/member/profile-image/**").permitAll().requestMatchers("/api/comments/**")
-						.permitAll().requestMatchers("/images/**").permitAll().anyRequest().authenticated());
+		http.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/api/member/login", "/api/member/join", "/api/member/refresh").permitAll()
+				.requestMatchers("/api/member/me").authenticated().requestMatchers("/api/post/list").permitAll()
+				.requestMatchers("/api/post/all").permitAll().requestMatchers("/api/post/*").permitAll()
+				.requestMatchers("/api/post/view/**").permitAll().requestMatchers("/api/member/profile-image/**")
+				.permitAll().requestMatchers("/api/comments/**").permitAll().requestMatchers("/api/post/user/**")
+				.permitAll().requestMatchers("/images/**").permitAll().requestMatchers("/api/likes/*/count").permitAll()
+
+				.requestMatchers("/api/likes/**").authenticated().anyRequest().authenticated());
 
 		// 로그인페이지 URL 을 /api/member/login 지정하고, 인증되지 않은 사용자가 보호된 리소스를 요청하면 이 URL 로
 		// 리다이렉트된다.

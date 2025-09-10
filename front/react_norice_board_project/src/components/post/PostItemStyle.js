@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 export const CardContainer = styled.div`
-    width: 600px;
+    width: 100%;
     margin: 0 auto;
     border: 1px solid #f2f2f2;
     border-radius: 10px;
@@ -18,7 +18,7 @@ export const ItemHeader = styled.div`
 export const ItemMain = styled.div`
     width: 100%;
     height: 500px;
-    background-color: red;
+    
 
     img {
         width: 100%;

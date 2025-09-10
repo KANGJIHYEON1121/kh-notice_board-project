@@ -23,6 +23,7 @@ export const RightHeader = styled.div`
   div {
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
 

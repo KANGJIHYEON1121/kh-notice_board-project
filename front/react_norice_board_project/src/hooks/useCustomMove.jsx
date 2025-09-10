@@ -34,8 +34,8 @@ const useCustomMove = () => {
   };
 
   // 리스트 페이지로 이동
-  const moveToList = () => {
-    navigate("/post/list");
+  const moveToList = (writer) => {
+    navigate(`/list/${writer}`);
   };
 
   return {

@@ -32,7 +32,7 @@ const root = createBrowserRouter([
     ),
   },
   {
-    path: "/list",
+    path: "/list/:writer",
     element: (
       <Suspense fallback={<Loading />}>
         <Header />

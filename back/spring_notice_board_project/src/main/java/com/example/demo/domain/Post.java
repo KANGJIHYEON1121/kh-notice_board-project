@@ -4,11 +4,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -16,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -26,6 +31,7 @@ import lombok.ToString;
 )
 @Table(name = "tbl_post")
 @Getter
+@Setter
 @ToString(exclude = "imageList")
 @Builder
 @AllArgsConstructor
@@ -37,7 +43,10 @@ public class Post {
 	private Long pno;
 
 	private String content;
-	private String writer;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "writer", referencedColumnName = "email")
+	private Member writer;
 	private LocalDate regDate;
 	private int likeCount;
 	private boolean delFlag;
@@ -46,16 +55,14 @@ public class Post {
 		this.delFlag = delFlag;
 	}
 
-	// tbl_product 테이블 외에 tbl_post_image_list 테이블이 생기고 tbl_post_id, filename, ord
-	// 컬럼이 들어감
-	@ElementCollection
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
 	private List<PostImage> imageList = new ArrayList<>();
 
 	public void changeContent(String content) {
 		this.content = content;
 	}
-	
+
 	@PrePersist
 	public void prePersist() {
 		this.regDate = LocalDate.now();
@@ -64,6 +71,7 @@ public class Post {
 	public void addImage(PostImage image) {
 		// 이미지 추가시 순서(ord) 자동 설정 (0, 1, 2, ...)
 		image.setOrd(this.imageList.size());
+		image.setPost(this);
 		imageList.add(image);
 	}
 
@@ -74,6 +82,14 @@ public class Post {
 
 	public void clearList() {
 		this.imageList.clear();
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+
+	public void setWriter(Member writer) {
+		this.writer = writer;
 	}
 
 }

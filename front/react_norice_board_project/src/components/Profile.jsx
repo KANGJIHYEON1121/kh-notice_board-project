@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import defaultProfileImg from "../assets/Type=Default.svg";
+import { HOST_URL } from "../api/HostUrl";
 
 const ProfileBox = styled.div`
   width: 120px;
@@ -13,12 +14,25 @@ const ProfileBox = styled.div`
     font-size: 18px;
     font-weight: 600;
   }
+
+  img {
+    width: 60px;
+    border-radius: 100%;
+  }
 `;
 
-const Profile = ({ writer, onClick }) => {
+const Profile = ({ writer, writerProfileImage, onClick }) => {
   return (
     <ProfileBox onClick={onClick}>
-      <img src={defaultProfileImg} alt="프로필 이미지" />
+      {console.log(`${HOST_URL}/member/profile-image/${writerProfileImage}`)}
+      <img
+        src={
+          writerProfileImage
+            ? `${HOST_URL}/member/profile-image/${writerProfileImage}`
+            : defaultProfileImg
+        }
+        alt="프로필 이미지"
+      />
       <p>{writer}</p>
     </ProfileBox>
   );

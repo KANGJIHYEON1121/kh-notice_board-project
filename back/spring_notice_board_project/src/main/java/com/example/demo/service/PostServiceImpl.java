@@ -11,12 +11,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.domain.Member;
 import com.example.demo.domain.Post;
 import com.example.demo.domain.PostImage;
 import com.example.demo.dto.PageRequestDTO;
 import com.example.demo.dto.PageResponseDTO;
 import com.example.demo.dto.PostDTO;
+import com.example.demo.dto.PostImageDTO;
+import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.PostRepository;
+import com.example.demo.security.SecurityUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,30 +29,49 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Transactional
 @Log4j2
-@RequiredArgsConstructor // final로 선언된 필드(modelMapper, todoRepository)에 대해 생성자 자동 생성자주입
+@RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
-	// 자동주입 대상은 final로
 	private final ModelMapper modelMapper;
 	private final PostRepository postRepository;
+	private final MemberRepository memberRepository;
 
 	@Override
 	public Long register(PostDTO postDTO) {
-		Post post = dtoToEntity(postDTO);
-		Post result = postRepository.save(post);
-		return result.getPno();
+		// 1. 토큰에서 이메일 꺼냄
+		String emailFromToken = SecurityUtil.getCurrentMemberEmail();
+		log.info("📧 Email from SecurityUtil: {}", emailFromToken);
+
+		// 2. 이메일로 Member 엔티티 조회
+		Member member = memberRepository.findByEmail(emailFromToken)
+				.orElseThrow(() -> new RuntimeException("Member not found"));
+
+		// 3. Post 생성
+		Post post = Post.builder().content(postDTO.getContent()).writer(member).build();
+
+		// 4. 이미지 리스트 처리 (uploadFileNames 이용)
+		List<String> fileNames = postDTO.getUploadFileNames();
+		if (fileNames != null && !fileNames.isEmpty()) {
+			for (String fileName : fileNames) {
+				PostImage image = PostImage.builder().fileName(fileName).build();
+
+				post.addImage(image); // 연관관계 자동 설정
+				log.info("📸 이미지 추가됨: {}", image.getFileName());
+			}
+		}
+
+		// 5. 저장 (Post만 저장하면 이미지도 같이 저장됨 - Cascade.ALL)
+		Post saved = postRepository.save(post);
+
+		log.info(" 저장 완료 Post ID: {}", saved.getPno());
+		return saved.getPno();
 	}
 
-	private Post dtoToEntity(PostDTO postDTO) {
-		Post post = Post.builder().pno(postDTO.getPno()).content(postDTO.getContent()).writer(postDTO.getWriter())
-				.build();
+	private Post dtoToEntity(PostDTO postDTO, Member writer) {
+		Post post = Post.builder().pno(postDTO.getPno()).content(postDTO.getContent()).writer(writer).build();
 
-		List<String> uploadFileNames = postDTO.getUploadFileNames();
-
-		if (uploadFileNames != null && !uploadFileNames.isEmpty()) {
-			uploadFileNames.forEach(uploadName -> {
-				post.addImageString(uploadName);
-			});
+		if (postDTO.getUploadFileNames() != null) {
+			postDTO.getUploadFileNames().forEach(post::addImageString);
 		}
 
 		return post;
@@ -56,20 +79,21 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public PostDTO get(Long pno) {
-		java.util.Optional<Post> result = postRepository.selectOne(pno);
+		Optional<Post> result = postRepository.selectOne(pno);
 		Post post = result.orElseThrow();
-		PostDTO postDTO = entityToDTO(post);
-		return postDTO;
+		return entityToDTO(post);
 	}
 
 	private PostDTO entityToDTO(Post post) {
-		PostDTO postDTO = PostDTO.builder().pno(post.getPno()).content(post.getContent()).writer(post.getWriter())
-				.regDate(post.getRegDate()).build();
+		PostDTO postDTO = PostDTO.builder().pno(post.getPno()).content(post.getContent())
+				.writerEmail(post.getWriter().getEmail()).writerNickname(post.getWriter().getNickname())
+				.writerProfileImage(post.getWriter().getProfileImage()).regDate(post.getRegDate())
+				.likeCount(post.getLikeCount()).build();
 
 		List<PostImage> imageList = post.getImageList();
 
-		if (imageList != null && imageList.size() > 0) {
-			List<String> fileNameList = imageList.stream().map(postImage -> postImage.getFileName()).toList();
+		if (imageList != null && !imageList.isEmpty()) {
+			List<String> fileNameList = imageList.stream().map(PostImage::getFileName).toList();
 			postDTO.setUploadFileNames(fileNameList);
 		}
 
@@ -78,15 +102,11 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public void modify(PostDTO postDTO) {
-		// 1. 게시글 조회
 		Optional<Post> result = postRepository.findById(postDTO.getPno());
 		Post post = result.orElseThrow();
 
-		// 2. 내용 변경
 		post.changeContent(postDTO.getContent());
-
-		// 3. 이미지 초기화 후 다시 추가
-		post.clearList(); // 기존 이미지 리스트 비우기
+		post.clearList();
 
 		List<String> uploadFileNames = postDTO.getUploadFileNames();
 		if (uploadFileNames != null && !uploadFileNames.isEmpty()) {
@@ -95,7 +115,6 @@ public class PostServiceImpl implements PostService {
 			});
 		}
 
-		// 4. 저장
 		postRepository.save(post);
 	}
 
@@ -108,7 +127,6 @@ public class PostServiceImpl implements PostService {
 	public PageResponseDTO<PostDTO> list(PageRequestDTO pageRequestDTO) {
 		log.info("list");
 
-		// 페이지 시작 번호가 0부터 시작하므로 -1 처리
 		Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(),
 				Sort.by("pno").descending());
 
@@ -118,7 +136,9 @@ public class PostServiceImpl implements PostService {
 			Post post = (Post) arr[0];
 			PostImage postImage = (PostImage) arr[1];
 
-			PostDTO postDTO = PostDTO.builder().pno(post.getPno()).writer(post.getWriter()).content(post.getContent())
+			PostDTO postDTO = PostDTO.builder().pno(post.getPno()).writerEmail(post.getWriter().getEmail())
+					.writerNickname(post.getWriter().getNickname())
+					.writerProfileImage(post.getWriter().getProfileImage()).content(post.getContent())
 					.likeCount(post.getLikeCount()).build();
 
 			if (postImage != null) {
@@ -137,17 +157,46 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public List<PostDTO> getAll() {
-	    List<Post> posts = postRepository.findAllNotDeletedWithImages();
+		List<Post> posts = postRepository.findAllNotDeletedWithImages();
 
-	    return posts.stream().map(post -> {
-	        PostDTO dto = modelMapper.map(post, PostDTO.class);
-	        List<PostImage> images = post.getImageList();
-	        if (images != null && !images.isEmpty()) {
-	            List<String> imageNames = images.stream().map(PostImage::getFileName).toList();
-	            dto.setUploadFileNames(imageNames);
-	        }
-	        return dto;
-	    }).collect(Collectors.toList());
+		return posts.stream().map(post -> {
+			PostDTO dto = PostDTO.builder().pno(post.getPno()).writerEmail(post.getWriter().getEmail())
+					.writerNickname(post.getWriter().getNickname())
+					.writerProfileImage(post.getWriter().getProfileImage()).content(post.getContent())
+					.likeCount(post.getLikeCount()).regDate(post.getRegDate()).build();
+
+			List<PostImage> images = post.getImageList();
+			if (images != null && !images.isEmpty()) {
+				List<String> imageNames = images.stream().map(PostImage::getFileName).toList();
+				dto.setUploadFileNames(imageNames);
+			}
+			return dto;
+		}).collect(Collectors.toList());
 	}
 
+	@Override
+	public PageResponseDTO<PostDTO> getListByWriter(String writer, PageRequestDTO pageRequestDTO) {
+		Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(),
+				Sort.by("pno").descending());
+
+		Page<Post> result = postRepository.findByWriterAndDelFlagFalse(writer, pageable);
+
+		List<PostDTO> dtoList = result.getContent().stream().map(post -> {
+			PostDTO dto = PostDTO.builder().pno(post.getPno()).writerEmail(post.getWriter().getEmail())
+					.writerNickname(post.getWriter().getNickname())
+					.writerProfileImage(post.getWriter().getProfileImage()).content(post.getContent())
+					.likeCount(post.getLikeCount()).regDate(post.getRegDate()).build();
+
+			List<PostImage> images = post.getImageList();
+			if (images != null && !images.isEmpty()) {
+				List<String> imageNames = images.stream().map(PostImage::getFileName).toList();
+				dto.setUploadFileNames(imageNames);
+			}
+
+			return dto;
+		}).toList();
+
+		return PageResponseDTO.<PostDTO>withAll().dtoList(dtoList).pageRequestDTO(pageRequestDTO)
+				.totalCount((int) result.getTotalElements()).build();
+	}
 }

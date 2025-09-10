@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,6 +44,14 @@ public class PostController {
 	public PageResponseDTO<PostDTO> list(PageRequestDTO pageRequestDTO) {
 		log.info("list............." + pageRequestDTO);
 		return postService.list(pageRequestDTO);
+	}
+
+	@GetMapping("/user/{writer}")
+	public PageResponseDTO<PostDTO> getPostsByWriter(@PathVariable("writer") String writer,
+			PageRequestDTO pageRequestDTO) {
+
+		log.info("Get posts by writer = " + writer);
+		return postService.getListByWriter(writer, pageRequestDTO);
 	}
 
 	@GetMapping("/all")
@@ -103,13 +112,16 @@ public class PostController {
 
 	@PostMapping
 	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-	public Map<String, Long> register(PostDTO postDTO) {
-		log.info("rgister: " + postDTO);
+	public Map<String, Long> register(@ModelAttribute PostDTO postDTO) {
+		log.info("📦 PostDTO: {}", postDTO);
 		List<MultipartFile> files = postDTO.getFiles();
+		log.info("📂 Multipart files: {}", files);
+
 		List<String> uploadFileNames = fileUtil.saveFiles(files);
+		log.info("📸 Saved file names: {}", uploadFileNames);
+
 		postDTO.setUploadFileNames(uploadFileNames);
-		log.info(uploadFileNames);
-		// 서비스 호출
+
 		Long pno = postService.register(postDTO);
 		return Map.of("result", pno);
 	}

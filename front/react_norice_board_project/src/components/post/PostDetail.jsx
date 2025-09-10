@@ -16,7 +16,7 @@ import Content from "../Content";
 import Button from "../Button";
 import DetailCarousel from "./DetailCarousel";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   addComment,
   deleteComment,
@@ -25,14 +25,22 @@ import {
 } from "../../api/commentApi";
 import { userId } from "../../api/HostUrl";
 import useCustomLogin from "../../hooks/useCustomLogin";
+import { getLikeCount } from "../../api/likeAPi";
 
 const PostDetail = ({ post, comments, setComments }) => {
   const { pno } = useParams();
   const [editCommentId, setEditCommentId] = useState(null); // 현재 수정 중인 댓글 ID
   const [editContent, setEditContent] = useState(""); // 수정 중인 내용
   const [newComment, setNewComment] = useState("");
+  const [likeCount, setLikeCount] = useState(0);
   const { isLogin } = useCustomLogin();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getLikeCount(pno).then((data) => {
+      setLikeCount(data.likeCount);
+    });
+  }, []);
 
   const onAddComment = async () => {
     if (!isLogin) {
@@ -98,15 +106,21 @@ const PostDetail = ({ post, comments, setComments }) => {
       </LeftSection>
       <RightSection>
         <RightHeader>
-          <Profile writer={post?.writer} />
+          <Profile
+            writerProfileImage={post?.writerProfileImage}
+            writer={post?.writerNickname}
+          />
           <div>
-            <LikeButton count={post?.likeCount} />
+            <LikeButton count={likeCount} pno={post?.pno} />
             <SettingButton pno={pno} />
           </div>
         </RightHeader>
         <RightMain>
           <div>
-            <Profile writer={post?.writer} />
+            <Profile
+              writerProfileImage={post?.writerProfileImage}
+              writer={post?.writerNickname}
+            />
             <Content content={post?.content} regDate={post?.regDate} />
           </div>
           {(Array.isArray(comments) ? comments : []).map((comment) => {
@@ -116,6 +130,7 @@ const PostDetail = ({ post, comments, setComments }) => {
               <CommentBox key={comment?.cno}>
                 <div>
                   <Profile writer={comment?.writer} />
+                  {console.log(comment)}
                   {isEditing ? (
                     <input
                       value={editContent}

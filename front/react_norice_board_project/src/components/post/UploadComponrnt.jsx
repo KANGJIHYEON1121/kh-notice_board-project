@@ -17,7 +17,12 @@ const UploadComponrnt = () => {
     const formData = new FormData();
     files.forEach((file) => formData.append("files", file));
     formData.append("content", content);
-    formData.append("writer", writer);
+    formData.append("writerEmail", writer);
+
+    // ✅ FormData 내용 확인 로그
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}:`, pair[1]);
+    }
 
     try {
       const result = await addPost(formData);

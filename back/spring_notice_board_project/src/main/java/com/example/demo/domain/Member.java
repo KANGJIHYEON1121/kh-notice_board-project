@@ -3,6 +3,7 @@ package com.example.demo.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,10 +22,19 @@ import lombok.ToString;
 @ToString(exclude = "memberRoleList")
 public class Member {
 	@Id
+	@Column(name = "EMAIL")
 	private String email;
-	private String pw;
+
+	@Column(name = "NICKNAME")
 	private String nickname;
+
+	@Column(name = "PW")
+	private String pw;
+
+	@Column(name = "SOCIAL")
 	private boolean social;
+
+	@Column(name = "PROFILE_IMAGE")
 	private String profileImage;
 
 	@ElementCollection(fetch = FetchType.LAZY)
@@ -50,9 +60,9 @@ public class Member {
 	public void changeSocial(boolean social) {
 		this.social = social;
 	}
-	
+
 	public void changeProfileImage(String profileImage) {
-	    this.profileImage = profileImage;
+		this.profileImage = profileImage;
 	}
 
 }

@@ -11,6 +11,8 @@ public interface PostService {
 
 	PostDTO get(Long pno);
 	
+	PageResponseDTO<PostDTO> getListByWriter(String writer, PageRequestDTO pageRequestDTO);
+	
 	List<PostDTO> getAll();
 
 	void modify(PostDTO postDTO);

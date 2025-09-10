@@ -22,11 +22,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@Modifying
 	@Query("update Post p set p.delFlag = :flag where p.pno = :pno")
 	void updateToDelete(@Param("pno") Long pno, @Param("flag") boolean flag);
-	
-	@Query("select p, pi from Post p left join p.imageList pi where p.delFlag = false")
+
+	@Query("SELECT p, pi FROM Post p LEFT JOIN p.imageList pi WHERE p.delFlag = false")
 	Page<Object[]> selectList(Pageable pageable);
-	
-	@EntityGraph(attributePaths = {"imageList"})
+
+	@EntityGraph(attributePaths = { "imageList", "writer" })
 	@Query("SELECT p FROM Post p WHERE p.delFlag = false ORDER BY p.pno DESC")
 	List<Post> findAllNotDeletedWithImages();
+
+	Page<Post> findByWriterAndDelFlagFalse(String writer, Pageable pageable);
 }

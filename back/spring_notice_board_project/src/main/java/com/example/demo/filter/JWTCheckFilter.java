@@ -92,6 +92,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 			return true;
 		}
 
+		if (path.equals("/api/post/all") || path.equals("/api/post/list")
+				|| (path.startsWith("/api/post/") && request.getMethod().equals("GET"))) {
+			return true;
+		}
+
 		// 댓글 조회(GET)만 제외
 		if (path.startsWith("/api/comments/") && request.getMethod().equals("GET")) {
 			return true;
@@ -99,6 +104,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
 		// 이미지 조회
 		if (path.startsWith("/api/products/view/") || path.startsWith("/images/")) {
+			return true;
+		}
+
+		// 좋아요 수 조회는 토큰 없이도 가능하게 제외
+		if (path.matches("/api/likes/\\d+/count")) {
 			return true;
 		}
 

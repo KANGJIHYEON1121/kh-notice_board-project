@@ -17,6 +17,13 @@ export const getList = async () => {
   return res.data;
 };
 
+export const getListByWriter = async (user, page = 1, size = 10) => {
+  const res = await axios.get(
+    `${HOST_URL}/post/user/${user}?page=${page}&size=${size}`
+  );
+  return res.data;
+};
+
 export const addPost = async (post) => {
   const res = await jwtAxios.post(`${HOST_URL}/post`, post, {
     headers: {

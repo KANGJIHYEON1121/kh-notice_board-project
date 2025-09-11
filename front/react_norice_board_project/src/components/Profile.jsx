@@ -24,7 +24,6 @@ const ProfileBox = styled.div`
 const Profile = ({ writer, writerProfileImage, onClick }) => {
   return (
     <ProfileBox onClick={onClick}>
-      {console.log(`${HOST_URL}/member/profile-image/${writerProfileImage}`)}
       <img
         src={
           writerProfileImage

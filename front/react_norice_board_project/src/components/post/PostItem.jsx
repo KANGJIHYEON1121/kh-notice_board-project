@@ -23,15 +23,17 @@ const PostItem = ({ post }) => {
         <Profile
           writerProfileImage={post?.writerProfileImage}
           writer={post?.writerNickname}
-          onClick={() => navigate(`list/${post?.writer}`)}
+          onClick={() => navigate(`list/${post?.writerNickname}`)}
         />
-        <SettingButton pno={post?.pno} />
+        <SettingButton writer={post?.writerNickname} pno={post?.pno} />
       </ItemHeader>
       <ItemMain onClick={() => moveToRead(post?.pno)}>
         <img
           src={
             post?.uploadFileNames?.[0]
               ? `${HOST_URL}/post/view/${post.uploadFileNames[0]}`
+              : post?.imageDTOList?.[0]?.fileName
+              ? `${HOST_URL}/post/view/${post.imageDTOList[0].fileName}`
               : `${HOST_URL}/post/view/default`
           }
           alt="게시글 이미지"

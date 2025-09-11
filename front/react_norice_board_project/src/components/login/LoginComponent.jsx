@@ -32,6 +32,7 @@ const LoginComponent = () => {
         } else {
           alert("로그인 성공");
           moveToPath("/");
+          window.location.reload();
         }
       });
   };

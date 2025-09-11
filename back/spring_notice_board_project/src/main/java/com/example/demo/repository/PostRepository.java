@@ -30,5 +30,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@Query("SELECT p FROM Post p WHERE p.delFlag = false ORDER BY p.pno DESC")
 	List<Post> findAllNotDeletedWithImages();
 
-	Page<Post> findByWriterAndDelFlagFalse(String writer, Pageable pageable);
+	Page<Post> findByWriterEmailAndDelFlagFalse(String email, Pageable pageable);
+
+	@Query("SELECT p FROM Post p JOIN p.writer m WHERE m.nickname = :nickname AND p.delFlag = false")
+	Page<Post> findByWriterNicknameAndDelFlagFalse(@Param("nickname") String nickname, Pageable pageable);
 }

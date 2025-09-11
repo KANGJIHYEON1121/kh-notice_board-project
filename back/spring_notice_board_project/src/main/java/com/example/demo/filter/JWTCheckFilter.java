@@ -97,6 +97,10 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 			return true;
 		}
 
+		if (path.startsWith("api/post/user/") && request.getMethod().equals("GET")) {
+			return true;
+		}
+
 		// 댓글 조회(GET)만 제외
 		if (path.startsWith("/api/comments/") && request.getMethod().equals("GET")) {
 			return true;

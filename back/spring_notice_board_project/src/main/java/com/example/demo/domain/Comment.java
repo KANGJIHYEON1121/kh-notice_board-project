@@ -21,7 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "tbl_comment")
@@ -29,28 +28,29 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "post")
+@ToString(exclude = { "post", "writer" })
 public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cno;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long cno;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_pno", nullable = false)
-    private Post post;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "post_pno", nullable = false)
+	private Post post;
 
-    @Column(nullable = false)
-    private String writer;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "writer", referencedColumnName = "email", nullable = false)
+	private Member writer;
 
-    @Column(nullable = false, length = 1000)
-    private String content;
-    
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdDate;
-    
-    public void changeContent(String content) {
-        this.content = content;
-    }
+	@Column(nullable = false, length = 1000)
+	private String content;
+
+	@CreatedDate
+	@Column(updatable = false)
+	private LocalDateTime createdDate;
+
+	public void changeContent(String content) {
+		this.content = content;
+	}
 }

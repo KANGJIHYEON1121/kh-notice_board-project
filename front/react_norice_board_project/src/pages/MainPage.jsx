@@ -2,7 +2,7 @@ import PostItem from "../components/post/PostItem";
 import { getAll } from "../api/postApi";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getCookie } from "../util/cookie";
+import UploadButton from "../components/post/UploadButton";
 
 const MainPage = () => {
   const [posts, setPosts] = useState([]);
@@ -29,6 +29,7 @@ const MainPage = () => {
       {posts.map((item) => (
         <PostItem key={item.pno} post={item} />
       ))}
+      <UploadButton />
     </Container>
   );
 };

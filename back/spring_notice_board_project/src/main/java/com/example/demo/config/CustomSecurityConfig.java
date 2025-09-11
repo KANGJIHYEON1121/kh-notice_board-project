@@ -45,11 +45,12 @@ public class CustomSecurityConfig {
 		// 요청 허용/차단 설정
 		http.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/member/login", "/api/member/join", "/api/member/refresh").permitAll()
-				.requestMatchers("/api/member/me").authenticated().requestMatchers("/api/post/list").permitAll()
-				.requestMatchers("/api/post/all").permitAll().requestMatchers("/api/post/*").permitAll()
-				.requestMatchers("/api/post/view/**").permitAll().requestMatchers("/api/member/profile-image/**")
-				.permitAll().requestMatchers("/api/comments/**").permitAll().requestMatchers("/api/post/user/**")
-				.permitAll().requestMatchers("/images/**").permitAll().requestMatchers("/api/likes/*/count").permitAll()
+				.requestMatchers("/api/post/user/**").permitAll().requestMatchers("/api/member/me").authenticated()
+				.requestMatchers("/api/post/list").permitAll().requestMatchers("/api/post/all").permitAll()
+				.requestMatchers("/api/post/*").permitAll().requestMatchers("/api/post/view/**").permitAll()
+				.requestMatchers("/api/member/profile-image/**").permitAll().requestMatchers("/api/comments/**")
+				.permitAll().requestMatchers("/api/post/user/**").permitAll().requestMatchers("/images/**").permitAll()
+				.requestMatchers("/api/likes/*/count").permitAll()
 
 				.requestMatchers("/api/likes/**").authenticated().anyRequest().authenticated());
 

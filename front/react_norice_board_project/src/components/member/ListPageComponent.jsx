@@ -22,6 +22,7 @@ const ListPageComponent = () => {
   const getList = async (user, page, size) => {
     try {
       const data = await getListByWriter(user, page, size);
+      console.log(data);
       setPostList(data.dtoList || []);
       setTotalPages(data.totalPage || 1);
     } catch (error) {
@@ -37,7 +38,9 @@ const ListPageComponent = () => {
     <Container>
       <PostList>
         {postList.map((post) => (
-          <PostItem post={post} key={post.pno}></PostItem>
+          <>
+            <PostItem post={post} key={post.pno}></PostItem>
+          </>
         ))}
       </PostList>
       <PaginationWrapper>

@@ -23,6 +23,11 @@ const useCustomMove = () => {
     navigate("/join");
   };
 
+  // 게시물 업로드 페이지로 이동
+  const moveToUpload = () => {
+    navigate("/upload");
+  };
+
   // 마이 페이지로 이동
   const moveToMyPage = () => {
     navigate("/mypage");
@@ -46,6 +51,7 @@ const useCustomMove = () => {
     moveToHome,
     moveToJoin,
     moveToMyPage,
+    moveToUpload,
   };
 };
 

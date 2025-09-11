@@ -23,9 +23,10 @@ import {
   getComments,
   updateComment,
 } from "../../api/commentApi";
-import { userId } from "../../api/HostUrl";
+import { userId, userNickName } from "../../api/HostUrl";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import { getLikeCount } from "../../api/likeAPi";
+import { getCookie } from "../../util/cookie";
 
 const PostDetail = ({ post, comments, setComments }) => {
   const { pno } = useParams();
@@ -107,17 +108,19 @@ const PostDetail = ({ post, comments, setComments }) => {
       <RightSection>
         <RightHeader>
           <Profile
+            onClick={() => navigate(`/list/${post?.writerNickname}`)}
             writerProfileImage={post?.writerProfileImage}
             writer={post?.writerNickname}
           />
           <div>
             <LikeButton count={likeCount} pno={post?.pno} />
-            <SettingButton pno={pno} />
+            <SettingButton writer={post?.writerNickname} pno={pno} />
           </div>
         </RightHeader>
         <RightMain>
           <div>
             <Profile
+              onClick={() => navigate(`/list/${post?.writerNickname}`)}
               writerProfileImage={post?.writerProfileImage}
               writer={post?.writerNickname}
             />
@@ -129,8 +132,10 @@ const PostDetail = ({ post, comments, setComments }) => {
             return (
               <CommentBox key={comment?.cno}>
                 <div>
-                  <Profile writer={comment?.writer} />
-                  {console.log(comment)}
+                  <Profile
+                    writerProfileImage={comment?.writerProfileImage}
+                    writer={comment?.writerNickname}
+                  />
                   {isEditing ? (
                     <input
                       value={editContent}
@@ -156,7 +161,7 @@ const PostDetail = ({ post, comments, setComments }) => {
                       <p onClick={onEditSubmit}>완료</p>
                       <p onClick={() => setEditCommentId(null)}>취소</p>
                     </>
-                  ) : comment.writer === userId ? (
+                  ) : comment.writerNickname === userNickName ? (
                     <>
                       <p onClick={() => onEditClick(comment)}>수정</p>
                       <p onClick={() => onDeleteSubmit(comment.cno)}>삭제</p>

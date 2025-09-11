@@ -175,26 +175,20 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PageResponseDTO<PostDTO> getListByWriter(String writer, PageRequestDTO pageRequestDTO) {
+	public PageResponseDTO<PostDTO> getListByWriter(String nickname, PageRequestDTO pageRequestDTO) {
 		Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize(),
 				Sort.by("pno").descending());
 
-		Page<Post> result = postRepository.findByWriterAndDelFlagFalse(writer, pageable);
+		Page<Post> result = postRepository.findByWriterNicknameAndDelFlagFalse(nickname, pageable);
 
-		List<PostDTO> dtoList = result.getContent().stream().map(post -> {
-			PostDTO dto = PostDTO.builder().pno(post.getPno()).writerEmail(post.getWriter().getEmail())
-					.writerNickname(post.getWriter().getNickname())
-					.writerProfileImage(post.getWriter().getProfileImage()).content(post.getContent())
-					.likeCount(post.getLikeCount()).regDate(post.getRegDate()).build();
-
-			List<PostImage> images = post.getImageList();
-			if (images != null && !images.isEmpty()) {
-				List<String> imageNames = images.stream().map(PostImage::getFileName).toList();
-				dto.setUploadFileNames(imageNames);
-			}
-
-			return dto;
-		}).toList();
+		List<PostDTO> dtoList = result.getContent().stream().map(post -> PostDTO.builder().pno(post.getPno())
+				.content(post.getContent()).likeCount(post.getLikeCount()).regDate(post.getRegDate())
+				.writerEmail(post.getWriter().getEmail()).writerNickname(post.getWriter().getNickname())
+				.writerProfileImage(post.getWriter().getProfileImage())
+				.imageDTOList(post.getImageList().stream()
+						.map(img -> PostImageDTO.builder().uuid(img.getUuid()).fileName(img.getFileName()).build())
+						.toList())
+				.build()).toList();
 
 		return PageResponseDTO.<PostDTO>withAll().dtoList(dtoList).pageRequestDTO(pageRequestDTO)
 				.totalCount((int) result.getTotalElements()).build();

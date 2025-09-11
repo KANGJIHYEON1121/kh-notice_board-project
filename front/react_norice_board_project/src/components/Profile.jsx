@@ -3,7 +3,7 @@ import defaultProfileImg from "../assets/Type=Default.svg";
 import { HOST_URL } from "../api/HostUrl";
 
 const ProfileBox = styled.div`
-  width: 120px;
+  width: 140px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -13,6 +13,7 @@ const ProfileBox = styled.div`
   p {
     font-size: 18px;
     font-weight: 600;
+    width: auto;
   }
 
   img {

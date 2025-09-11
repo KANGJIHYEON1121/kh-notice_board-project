@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import Loading from "../pages/Loading";
-import Header from "../include/Header";
 
 const MainPage = lazy(() => import("../pages/MainPage"));
 const UploadPage = lazy(() => import("../pages/UploadPage"));
@@ -11,13 +10,13 @@ const ModifyPage = lazy(() => import("../pages/ModifyPage"));
 const LoginPage = lazy(() => import("../pages/LoginPage"));
 const JoinPage = lazy(() => import("../pages/JoinPage"));
 const MyPage = lazy(() => import("../pages/MyPage"));
+const KakaoRedirect = lazy(() => import("../pages/KakaoRedirectPage"));
 
 const root = createBrowserRouter([
   {
     path: "/",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <MainPage />
       </Suspense>
     ),
@@ -26,7 +25,6 @@ const root = createBrowserRouter([
     path: "/upload",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <UploadPage />
       </Suspense>
     ),
@@ -35,7 +33,6 @@ const root = createBrowserRouter([
     path: "/list/:writer",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <ListPage />
       </Suspense>
     ),
@@ -44,7 +41,6 @@ const root = createBrowserRouter([
     path: "/read/:pno",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <ReadPage />
       </Suspense>
     ),
@@ -53,7 +49,6 @@ const root = createBrowserRouter([
     path: "/modify/:pno",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <ModifyPage />
       </Suspense>
     ),
@@ -62,7 +57,6 @@ const root = createBrowserRouter([
     path: "/login",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <LoginPage />
       </Suspense>
     ),
@@ -71,7 +65,6 @@ const root = createBrowserRouter([
     path: "/join",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <JoinPage />
       </Suspense>
     ),
@@ -80,8 +73,15 @@ const root = createBrowserRouter([
     path: "/mypage",
     element: (
       <Suspense fallback={<Loading />}>
-        <Header />
         <MyPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/member/kakao",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <KakaoRedirect />
       </Suspense>
     ),
   },

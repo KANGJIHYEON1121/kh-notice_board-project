@@ -7,14 +7,16 @@ import {
   deleteProfileImage,
   myProfile,
   updateMember,
+  modifyMember,
 } from "../../api/memberApi";
-import { HOST_URL } from "../../api/HostUrl";
+import { HOST_URL, isSocial } from "../../api/HostUrl";
 
 const MyPageComponent = () => {
   const [memberInfo, setMemberInfo] = useState({
     email: "",
     nickname: "",
     profileImage: "",
+    pw: "",
   });
   const [profileImageFile, setProfileImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -62,24 +64,44 @@ const MyPageComponent = () => {
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("nickname", memberInfo.nickname);
+
+    if (isSocial) {
+      formData.append("email", memberInfo.email);
+      formData.append("pw", memberInfo.pw);
+    }
+
     if (profileImageFile) {
       formData.append("profileImage", profileImageFile);
     } else if (memberInfo.profileImage === "") {
-      formData.append("profileImage", null); // handle image deletion with null
+      formData.append("profileImage", null);
     }
 
     try {
-      const result = await updateMember(formData);
+      if (isSocial) {
+        const result = await modifyMember(formData);
 
-      const updated = {
-        ...memberInfo,
-        ...(result.profileImage && { profileImage: result.profileImage }), // profileImage가 있을 때만 덮어쓰기
-      };
+        const updated = {
+          ...memberInfo,
+          ...(result.profileImage && { profileImage: result.profileImage }), // profileImage가 있을 때만 덮어쓰기
+        };
 
-      setMemberInfo(updated);
-      setPreviewUrl(null);
-      alert("회원정보가 수정되었습니다.");
-      getMyProfile();
+        setMemberInfo(updated);
+        setPreviewUrl(null);
+        alert("회원정보가 수정되었습니다.");
+        getMyProfile();
+      } else {
+        const result = await updateMember(formData);
+
+        const updated = {
+          ...memberInfo,
+          ...(result.profileImage && { profileImage: result.profileImage }), // profileImage가 있을 때만 덮어쓰기
+        };
+
+        setMemberInfo(updated);
+        setPreviewUrl(null);
+        alert("회원정보가 수정되었습니다.");
+        getMyProfile();
+      }
     } catch (err) {
       console.error(err);
       alert("회원정보 수정 실패");
@@ -130,6 +152,20 @@ const MyPageComponent = () => {
           placeholder={"닉네임"}
         />
       </div>
+      {isSocial ? (
+        <>
+          <p>비밀번호</p>
+          <div>
+            <Input
+              type="password"
+              name="pw"
+              value={memberInfo.pw}
+              onChange={handleChange}
+              placeholder={"비밀번호를 입력 해주세요."}
+            />
+          </div>
+        </>
+      ) : null}
       <Button onClick={handleSubmit} text={"저장"} />
     </InfoContainer>
   );

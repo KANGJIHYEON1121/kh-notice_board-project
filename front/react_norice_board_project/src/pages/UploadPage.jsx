@@ -1,5 +1,7 @@
 import UploadComponrnt from "../components/post/UploadComponrnt";
 import useCustomLogin from "../hooks/useCustomLogin";
+import Footer from "../include/Footer";
+import Header from "../include/Header";
 
 const UploadPage = () => {
   const { isLogin, moveToLoginReturn } = useCustomLogin();
@@ -11,6 +13,7 @@ const UploadPage = () => {
 
   return (
     <div>
+      <Header />
       <UploadComponrnt />
     </div>
   );

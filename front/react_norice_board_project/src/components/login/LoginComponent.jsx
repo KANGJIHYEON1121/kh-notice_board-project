@@ -5,6 +5,7 @@ import logo from "../../assets/Logo.svg";
 import { useDispatch } from "react-redux";
 import useCustomLogin from "../../hooks/useCustomLogin";
 import useCustomMove from "../../hooks/useCustomMove";
+import KakaoLoginButton from "./KakaoLoginButton";
 
 const initState = {
   email: "",
@@ -15,7 +16,7 @@ const LoginComponent = () => {
   const [loginParam, setLoginParam] = useState({ ...initState });
   const dispatch = useDispatch();
   const { doLogin, moveToPath } = useCustomLogin();
-  const { moveToJoin } = useCustomMove();
+  const { moveToJoin, moveToHome } = useCustomMove();
 
   const handleChange = (e) => {
     loginParam[e.target.name] = e.target.value;
@@ -39,7 +40,7 @@ const LoginComponent = () => {
 
   return (
     <LoginContainer>
-      <img src={logo} alt="포스트잇 로고" />
+      <img src={logo} alt="포스트잇 로고" onClick={() => moveToHome()} />
       <div>
         <p>이메일</p>
         <Input
@@ -61,6 +62,7 @@ const LoginComponent = () => {
         />
       </div>
       <LoginButton onClick={handleClickLogin}>로그인</LoginButton>
+      <KakaoLoginButton />
       <JoinBtn onClick={moveToJoin}>회원가입</JoinBtn>
     </LoginContainer>
   );

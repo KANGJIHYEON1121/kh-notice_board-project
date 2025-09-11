@@ -133,6 +133,7 @@ const PostDetail = ({ post, comments, setComments }) => {
               <CommentBox key={comment?.cno}>
                 <div>
                   <Profile
+                    onClick={() => navigate(`/list/${comment?.writerNickname}`)}
                     writerProfileImage={comment?.writerProfileImage}
                     writer={comment?.writerNickname}
                   />

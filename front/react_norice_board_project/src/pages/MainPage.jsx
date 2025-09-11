@@ -3,6 +3,8 @@ import { getAll } from "../api/postApi";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import UploadButton from "../components/post/UploadButton";
+import Header from "../include/Header";
+import Footer from "../include/Footer";
 
 const MainPage = () => {
   const [posts, setPosts] = useState([]);
@@ -25,12 +27,16 @@ const MainPage = () => {
       });
 
   return (
-    <Container>
-      {posts.map((item) => (
-        <PostItem key={item.pno} post={item} />
-      ))}
-      <UploadButton />
-    </Container>
+    <>
+      <Header />
+      <Container>
+        {posts.map((item) => (
+          <PostItem key={item.pno} post={item} />
+        ))}
+        <UploadButton />
+      </Container>
+      <Footer />
+    </>
   );
 };
 

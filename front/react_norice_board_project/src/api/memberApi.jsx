@@ -23,18 +23,23 @@ export const joinPost = async (member) => {
 };
 
 export const updateMember = async (formData) => {
-  const res = await jwtAxios.post(`${HOST_URL}/member/update`, formData, {
+  const res = await jwtAxios.post(`${host}/update`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data;
 };
 
+export const modifyMember = async (member) => {
+  const res = await jwtAxios.put(`${host}/modify`, member);
+  return res.data;
+};
+
 export const myProfile = async () => {
-  const res = await jwtAxios.get(`${HOST_URL}/member/me`);
+  const res = await jwtAxios.get(`${host}/me`);
   return res.data;
 };
 
 export const deleteProfileImage = async () => {
-  const res = await jwtAxios.delete(`${HOST_URL}/member/profile`);
+  const res = await jwtAxios.delete(`${host}/profile`);
   return res.data;
 };

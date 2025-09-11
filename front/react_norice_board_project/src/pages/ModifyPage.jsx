@@ -1,6 +1,7 @@
 import React from "react";
 import ModifyComponent from "../components/post/ModifyComponent";
 import useCustomLogin from "../hooks/useCustomLogin";
+import Header from "../include/Header";
 
 const ModifyPage = () => {
   const { isLogin, moveToLoginReturn } = useCustomLogin();
@@ -11,6 +12,7 @@ const ModifyPage = () => {
 
   return (
     <div>
+      <Header />
       <ModifyComponent />
     </div>
   );

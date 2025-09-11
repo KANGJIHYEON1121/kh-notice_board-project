@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,15 +22,18 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.domain.Member;
 import com.example.demo.dto.MemberDTO;
 import com.example.demo.dto.MemberJoinDTO;
+import com.example.demo.dto.MemberModifyDTO;
 import com.example.demo.dto.MemberUpdateDTO;
 import com.example.demo.service.MemberService;
 import com.example.demo.util.CustomFileUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
+@Log4j2
 public class MemberController {
 	private final MemberService memberService;
 	private final CustomFileUtil fileUtil;
@@ -69,5 +73,12 @@ public class MemberController {
 	public ResponseEntity<?> deleteProfileImage(@AuthenticationPrincipal MemberDTO memberDTO) {
 		memberService.removeProfileImage(memberDTO.getEmail());
 		return ResponseEntity.ok().body(Map.of("result", "deleted"));
+	}
+
+	@PutMapping("/modify")
+	public Map<String, String> modify(@ModelAttribute MemberModifyDTO dto) {
+		log.info("member modify: " + dto);
+		memberService.modifyMember(dto);
+		return Map.of("result", "modified");
 	}
 }

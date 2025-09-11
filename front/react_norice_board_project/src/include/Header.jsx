@@ -17,6 +17,7 @@ const Nav = styled.nav`
   gap: 10px;
   margin: 0 auto;
   margin-bottom: 30px;
+  padding: 10px;
 
   img {
     cursor: pointer;

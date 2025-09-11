@@ -3,6 +3,7 @@ import LikeBtn from "../assets/State=Like.svg";
 import UnLikeBtn from "../assets/State=UnLike.svg";
 import { useEffect, useState } from "react";
 import { getLikeStatus, toggleLike, getLikeCount } from "../api/likeAPi";
+import useCustomLogin from "../hooks/useCustomLogin";
 
 const Div = styled.div`
   width: 40px;
@@ -27,15 +28,18 @@ const LikeBox = styled.div`
 const LikeButton = ({ count, pno }) => {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(count);
+  const { isLogin } = useCustomLogin();
 
   useEffect(() => {
     const fetchLikeStatusAndCount = async () => {
       try {
-        const statusData = await getLikeStatus(pno); // 로그인 사용자 기준 좋아요 상태
-        setIsLike(statusData.liked);
+        if (isLogin) {
+          const statusData = await getLikeStatus(pno); // 로그인 사용자 기준 좋아요 상태
+          setIsLike(statusData.liked);
 
-        const countData = await getLikeCount(pno); // 좋아요 수 갱신
-        setLikeCount(countData.likeCount);
+          const countData = await getLikeCount(pno); // 좋아요 수 갱신
+          setLikeCount(countData.likeCount);
+        }
       } catch (error) {
         console.error("좋아요 상태/수 조회 실패", error);
       }

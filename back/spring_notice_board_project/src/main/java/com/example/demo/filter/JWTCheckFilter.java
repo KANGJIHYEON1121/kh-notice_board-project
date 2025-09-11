@@ -86,6 +86,11 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 			return true;
 		}
 
+		// 카카오 로그인 관련 경로는 제외
+		if (path.equals("/api/member/kakao")) {
+			return true;
+		}
+
 		// 게시글 목록/조회는 제외
 		if (path.equals("/api/post/list") || path.equals("/api/post/all")
 				|| (path.startsWith("/api/post/") && request.getMethod().equals("GET"))) {

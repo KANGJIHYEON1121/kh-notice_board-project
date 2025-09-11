@@ -44,15 +44,15 @@ public class CustomSecurityConfig {
 
 		// 요청 허용/차단 설정
 		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/member/login", "/api/member/join", "/api/member/refresh").permitAll()
-				.requestMatchers("/api/post/user/**").permitAll().requestMatchers("/api/member/me").authenticated()
-				.requestMatchers("/api/post/list").permitAll().requestMatchers("/api/post/all").permitAll()
-				.requestMatchers("/api/post/*").permitAll().requestMatchers("/api/post/view/**").permitAll()
-				.requestMatchers("/api/member/profile-image/**").permitAll().requestMatchers("/api/comments/**")
-				.permitAll().requestMatchers("/api/post/user/**").permitAll().requestMatchers("/images/**").permitAll()
-				.requestMatchers("/api/likes/*/count").permitAll()
+				.requestMatchers("/api/member/login", "/api/member/join", "/api/member/refresh", "/api/member/kakao",
+						"/api/post/user/**", "/api/post/list", "/api/post/all", "/api/post/*", "/api/post/view/**",
+						"/api/member/profile-image/**", "/api/comments/**", "/images/**", "/api/likes/*/count")
+				.permitAll()
 
-				.requestMatchers("/api/likes/**").authenticated().anyRequest().authenticated());
+				.requestMatchers("/api/member/modify", "/api/member/me", "/api/likes/**").authenticated()
+
+				.anyRequest().permitAll() // 또는 authenticated(), 상황에 따라
+		);
 
 		// 로그인페이지 URL 을 /api/member/login 지정하고, 인증되지 않은 사용자가 보호된 리소스를 요청하면 이 URL 로
 		// 리다이렉트된다.

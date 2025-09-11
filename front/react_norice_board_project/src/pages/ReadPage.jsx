@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { getPost } from "../api/postApi";
 import { getComments } from "../api/commentApi";
+import Header from "../include/Header";
 
 const ReadPage = () => {
   const { pno } = useParams();
@@ -35,6 +36,7 @@ const ReadPage = () => {
 
   return (
     <div>
+      <Header />
       <PostDetail post={post} comments={comments} setComments={setComments} />
     </div>
   );

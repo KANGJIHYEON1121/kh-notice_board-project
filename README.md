@@ -45,7 +45,7 @@
 
 아래는 프로젝트에서 사용된 데이터베이스 ERD(Entity Relationship Diagram)입니다:
 
-![ERD](https://github.com/KANGJIHYEON1121/kh-notice_board-project/assets/C1B99693-5E39-4630-A3A4-49F87B048A0F/C1B99693-5E39-4630-A3A4-49F87B048A0F)
+![ERD](<img width="954" height="576" alt="Image" src="https://github.com/user-attachments/assets/cf70e30d-c3af-4a02-bc88-55a0b601a519" />)
 
 ---
 

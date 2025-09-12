@@ -45,7 +45,7 @@
 
 아래는 프로젝트에서 사용된 데이터베이스 ERD(Entity Relationship Diagram)입니다:
 
-![ERD](<img width="954" height="576" alt="Image" src="https://github.com/user-attachments/assets/cf70e30d-c3af-4a02-bc88-55a0b601a519" />)
+<img width="954" height="576" alt="Image" src="https://github.com/user-attachments/assets/cf70e30d-c3af-4a02-bc88-55a0b601a519" />
 
 ---
 

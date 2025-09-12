@@ -53,20 +53,23 @@
 
 ```
 📦 back
- ┣ 📂config          # JWT, Spring Security 설정
- ┣ 📂controller      # REST API 컨트롤러
- ┣ 📂dto             # 데이터 전달용 DTO 클래스
- ┣ 📂entity          # JPA 엔티티
- ┣ 📂repository      # JPA 레포지토리
- ┗ 📂service         # 비즈니스 로직 서비스
+ ┣ 📂config
+ ┣ 📂controller
+ ┣ 📂domain
+ ┣ 📂dto
+ ┣ 📂filter
+ ┣ 📂repository
+ ┣ 📂security
+ ┣ 📂service
+ ┗ 📂util
 
-📦 front/react_notice_board_project
- ┣ 📂api             # Axios API 호출 함수
- ┣ 📂assets          # 이미지 등 정적 리소스
+📦 front
+ ┣ 📂api
+ ┣ 📂assets
  ┣ 📂components
- ┃ ┣ 📂common        # 공통 컴포넌트
- ┃ ┣ 📂comment       # 댓글 컴포넌트
- ┃ ┣ 📂member        # 회원 관련 컴포넌트
- ┃ ┗ 📂post          # 게시글 관련 컴포넌트
- ┗ 📂pages           # 주요 페이지 컴포넌트
+ ┣ 📂include
+ ┣ 📂pages
+ ┣ 📂router
+ ┣ 📂slices
+ ┗ 📂util
 ```
